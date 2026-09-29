@@ -1,0 +1,18 @@
+{
+  "patient_id": "SYN-BUNDA-P0001",
+  "dataset_id": "demo-100-v1",
+  "age_years": 40,
+  "sex": "Female",
+  "encounters": [
+    {
+      "encounter_id": "enc-demo-100-v1-0001",
+      "visit_date": "2024-05-29",
+      "specialist": "General Practice"
+    }
+  ],
+  "data_gaps": [
+    "allergies not recorded",
+    "current medication not recorded",
+    "SOAP notes not recorded"
+  ]
+}

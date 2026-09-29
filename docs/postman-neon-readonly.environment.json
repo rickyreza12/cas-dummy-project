@@ -1,0 +1,15 @@
+{
+  "name": "CAS Dummy - Neon read-only",
+  "values": [
+    { "key": "baseUrl", "value": "SET_APPROVED_READONLY_API_URL", "type": "default", "enabled": true },
+    { "key": "accessToken", "value": "SET_LOCALLY", "type": "secret", "enabled": true },
+    { "key": "patientId", "value": "SYN-BUNDA-P0001", "type": "default", "enabled": true },
+    { "key": "encounterId", "value": "enc-demo-1000000-v1-0001", "type": "default", "enabled": true },
+    { "key": "sourceId", "value": "SYN-BUNDA-V0001-01-SRC", "type": "default", "enabled": true },
+    { "key": "importJobId", "value": "READONLY_DO_NOT_IMPORT", "type": "default", "enabled": true },
+    { "key": "queueItemId", "value": "READONLY_DO_NOT_CREATE", "type": "default", "enabled": true },
+    { "key": "summaryJobId", "value": "READONLY_DO_NOT_CREATE", "type": "default", "enabled": true },
+    { "key": "summaryId", "value": "SET_FROM_APPROVED_READONLY_RESPONSE", "type": "default", "enabled": true }
+  ],
+  "_postman_variable_scope": "environment"
+}

@@ -1,0 +1,15 @@
+{
+  "name": "CAS Dummy - local 100 rows",
+  "values": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:8000", "type": "default", "enabled": true },
+    { "key": "accessToken", "value": "SET_LOCALLY", "type": "secret", "enabled": true },
+    { "key": "patientId", "value": "SYN-BUNDA-P0001", "type": "default", "enabled": true },
+    { "key": "encounterId", "value": "enc-demo-100-v1-0001", "type": "default", "enabled": true },
+    { "key": "sourceId", "value": "SYN-BUNDA-V0001-01-SRC", "type": "default", "enabled": true },
+    { "key": "importJobId", "value": "SET_FROM_LOCATION", "type": "default", "enabled": true },
+    { "key": "queueItemId", "value": "SET_FROM_LOCATION", "type": "default", "enabled": true },
+    { "key": "summaryJobId", "value": "SET_FROM_LOCATION", "type": "default", "enabled": true },
+    { "key": "summaryId", "value": "SET_FROM_RESPONSE", "type": "default", "enabled": true }
+  ],
+  "_postman_variable_scope": "environment"
+}

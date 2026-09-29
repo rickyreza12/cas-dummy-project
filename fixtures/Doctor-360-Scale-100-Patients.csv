@@ -1,0 +1,101 @@
+patient_id,age_years,sex,visit_date,specialist,icd10_code,prescription_recorded,source_record_id
+SYN-BUNDA-P0001,40,Female,2024-05-29,General Practice,Z30.9,Paracetamol,SYN-BUNDA-V0001-01-SRC
+SYN-BUNDA-P0002,47,Female,2024-07-16,Obstetrics and Gynecology,Z34.9,Folic acid,SYN-BUNDA-V0002-01-SRC
+SYN-BUNDA-P0003,35,Female,2023-10-28,Obstetrics and Gynecology,Z34.9,Ibuprofen,SYN-BUNDA-V0003-01-SRC
+SYN-BUNDA-P0004,48,Female,2023-07-28,General Practice,N94.6,Ferrous sulfate,SYN-BUNDA-V0004-01-SRC
+SYN-BUNDA-P0005,42,Female,2023-12-31,Obstetrics and Gynecology,N93.9,Ibuprofen,SYN-BUNDA-V0005-01-SRC
+SYN-BUNDA-P0006,28,Female,2023-03-22,General Practice,Z30.9,Ibuprofen,SYN-BUNDA-V0006-01-SRC
+SYN-BUNDA-P0007,23,Female,2026-02-20,General Practice,Z34.9,Paracetamol,SYN-BUNDA-V0007-01-SRC
+SYN-BUNDA-P0008,39,Female,2023-11-19,Internal Medicine,Z34.9,Folic acid,SYN-BUNDA-V0008-01-SRC
+SYN-BUNDA-P0009,20,Female,2024-08-15,Obstetrics and Gynecology,Z34.9,None recorded,SYN-BUNDA-V0009-01-SRC
+SYN-BUNDA-P0010,42,Female,2023-11-26,Obstetrics and Gynecology,Z30.9,Ibuprofen,SYN-BUNDA-V0010-01-SRC
+SYN-BUNDA-P0011,35,Female,2023-06-01,Internal Medicine,Z34.9,Ibuprofen,SYN-BUNDA-V0011-01-SRC
+SYN-BUNDA-P0012,25,Female,2023-02-25,General Practice,N94.6,Folic acid,SYN-BUNDA-V0012-01-SRC
+SYN-BUNDA-P0013,49,Female,2023-02-03,Obstetrics and Gynecology,N93.9,Folic acid,SYN-BUNDA-V0013-01-SRC
+SYN-BUNDA-P0014,27,Female,2024-01-13,Obstetrics and Gynecology,Z34.9,Ibuprofen,SYN-BUNDA-V0014-01-SRC
+SYN-BUNDA-P0015,49,Female,2023-06-04,Obstetrics and Gynecology,Z30.9,Ferrous sulfate,SYN-BUNDA-V0015-01-SRC
+SYN-BUNDA-P0016,41,Female,2023-08-15,Obstetrics and Gynecology,Z30.9,Ibuprofen,SYN-BUNDA-V0016-01-SRC
+SYN-BUNDA-P0017,48,Female,2023-05-06,General Practice,N92.0,Paracetamol,SYN-BUNDA-V0017-01-SRC
+SYN-BUNDA-P0018,49,Female,2024-08-31,Internal Medicine,Z30.9,Ferrous sulfate,SYN-BUNDA-V0018-01-SRC
+SYN-BUNDA-P0019,34,Female,2023-06-06,Internal Medicine,Z30.9,Ibuprofen,SYN-BUNDA-V0019-01-SRC
+SYN-BUNDA-P0020,30,Female,2023-04-20,Obstetrics and Gynecology,Z30.9,Folic acid,SYN-BUNDA-V0020-01-SRC
+SYN-BUNDA-P0021,42,Female,2024-07-04,Internal Medicine,N94.6,None recorded,SYN-BUNDA-V0021-01-SRC
+SYN-BUNDA-P0022,33,Female,2023-09-23,Obstetrics and Gynecology,N94.6,Ibuprofen,SYN-BUNDA-V0022-01-SRC
+SYN-BUNDA-P0023,38,Female,2023-10-02,Obstetrics and Gynecology,Z34.9,Paracetamol,SYN-BUNDA-V0023-01-SRC
+SYN-BUNDA-P0024,29,Female,2024-09-14,Obstetrics and Gynecology,Z30.9,Ibuprofen,SYN-BUNDA-V0024-01-SRC
+SYN-BUNDA-P0025,38,Female,2023-12-01,Internal Medicine,Z34.9,Folic acid,SYN-BUNDA-V0025-01-SRC
+SYN-BUNDA-P0026,48,Female,2025-01-25,Obstetrics and Gynecology,N94.6,Paracetamol,SYN-BUNDA-V0026-01-SRC
+SYN-BUNDA-P0027,33,Female,2026-03-11,Obstetrics and Gynecology,N94.6,Paracetamol,SYN-BUNDA-V0027-01-SRC
+SYN-BUNDA-P0028,42,Female,2024-04-04,Obstetrics and Gynecology,Z30.9,Ferrous sulfate,SYN-BUNDA-V0028-01-SRC
+SYN-BUNDA-P0029,28,Female,2023-01-06,General Practice,Z34.9,Ibuprofen,SYN-BUNDA-V0029-01-SRC
+SYN-BUNDA-P0030,35,Female,2023-03-30,Obstetrics and Gynecology,Z30.9,Ferrous sulfate,SYN-BUNDA-V0030-01-SRC
+SYN-BUNDA-P0031,25,Female,2024-07-09,General Practice,N92.0,None recorded,SYN-BUNDA-V0031-01-SRC
+SYN-BUNDA-P0032,47,Female,2023-05-06,General Practice,Z34.9,Ibuprofen,SYN-BUNDA-V0032-01-SRC
+SYN-BUNDA-P0033,42,Female,2023-08-14,Obstetrics and Gynecology,Z30.9,Ibuprofen,SYN-BUNDA-V0033-01-SRC
+SYN-BUNDA-P0034,43,Female,2023-09-07,Obstetrics and Gynecology,Z34.9,Folic acid,SYN-BUNDA-V0034-01-SRC
+SYN-BUNDA-P0035,36,Female,2023-10-21,Obstetrics and Gynecology,Z30.9,Paracetamol,SYN-BUNDA-V0035-01-SRC
+SYN-BUNDA-P0036,18,Female,2024-10-06,Obstetrics and Gynecology,Z34.9,Paracetamol,SYN-BUNDA-V0036-01-SRC
+SYN-BUNDA-P0037,22,Female,2023-09-16,Obstetrics and Gynecology,Z30.9,Folic acid,SYN-BUNDA-V0037-01-SRC
+SYN-BUNDA-P0038,46,Female,2023-09-24,Obstetrics and Gynecology,Z30.9,Paracetamol,SYN-BUNDA-V0038-01-SRC
+SYN-BUNDA-P0039,45,Female,2023-11-10,Internal Medicine,Z34.9,Paracetamol,SYN-BUNDA-V0039-01-SRC
+SYN-BUNDA-P0040,40,Female,2023-08-04,Obstetrics and Gynecology,N94.6,Paracetamol,SYN-BUNDA-V0040-01-SRC
+SYN-BUNDA-P0041,34,Female,2024-01-27,Obstetrics and Gynecology,N94.6,Ferrous sulfate,SYN-BUNDA-V0041-01-SRC
+SYN-BUNDA-P0042,27,Female,2023-07-15,Internal Medicine,Z34.9,Folic acid,SYN-BUNDA-V0042-01-SRC
+SYN-BUNDA-P0043,37,Female,2025-09-09,General Practice,N94.6,Paracetamol,SYN-BUNDA-V0043-01-SRC
+SYN-BUNDA-P0044,43,Female,2023-04-16,General Practice,Z34.9,Ibuprofen,SYN-BUNDA-V0044-01-SRC
+SYN-BUNDA-P0045,49,Female,2023-05-31,Obstetrics and Gynecology,Z30.9,Paracetamol,SYN-BUNDA-V0045-01-SRC
+SYN-BUNDA-P0046,54,Female,2023-08-31,Obstetrics and Gynecology,N93.9,Ferrous sulfate,SYN-BUNDA-V0046-01-SRC
+SYN-BUNDA-P0047,21,Female,2023-07-12,Obstetrics and Gynecology,N93.9,Ibuprofen,SYN-BUNDA-V0047-01-SRC
+SYN-BUNDA-P0048,36,Female,2024-04-09,General Practice,N92.0,Paracetamol,SYN-BUNDA-V0048-01-SRC
+SYN-BUNDA-P0049,46,Female,2026-02-06,Obstetrics and Gynecology,N94.6,Ferrous sulfate,SYN-BUNDA-V0049-01-SRC
+SYN-BUNDA-P0050,50,Female,2025-12-15,General Practice,N93.9,None recorded,SYN-BUNDA-V0050-01-SRC
+SYN-BUNDA-P0051,30,Female,2023-05-11,General Practice,N92.0,Ibuprofen,SYN-BUNDA-V0051-01-SRC
+SYN-BUNDA-P0052,19,Female,2025-11-02,Obstetrics and Gynecology,N93.9,Folic acid,SYN-BUNDA-V0052-01-SRC
+SYN-BUNDA-P0053,20,Female,2023-02-17,General Practice,N93.9,Paracetamol,SYN-BUNDA-V0053-01-SRC
+SYN-BUNDA-P0054,30,Female,2025-01-04,Internal Medicine,N93.9,Ferrous sulfate,SYN-BUNDA-V0054-01-SRC
+SYN-BUNDA-P0055,41,Female,2023-01-30,Obstetrics and Gynecology,N92.0,Ibuprofen,SYN-BUNDA-V0055-01-SRC
+SYN-BUNDA-P0056,18,Female,2023-06-20,Obstetrics and Gynecology,N94.6,Paracetamol,SYN-BUNDA-V0056-01-SRC
+SYN-BUNDA-P0057,31,Female,2023-02-12,Obstetrics and Gynecology,N92.0,Ibuprofen,SYN-BUNDA-V0057-01-SRC
+SYN-BUNDA-P0058,44,Female,2024-02-26,Internal Medicine,N93.9,None recorded,SYN-BUNDA-V0058-01-SRC
+SYN-BUNDA-P0059,44,Female,2023-07-04,Internal Medicine,Z34.9,Paracetamol,SYN-BUNDA-V0059-01-SRC
+SYN-BUNDA-P0060,46,Female,2025-04-21,Internal Medicine,N94.6,Ferrous sulfate,SYN-BUNDA-V0060-01-SRC
+SYN-BUNDA-P0061,55,Female,2023-01-15,General Practice,Z34.9,Ferrous sulfate,SYN-BUNDA-V0061-01-SRC
+SYN-BUNDA-P0062,53,Female,2023-12-24,Obstetrics and Gynecology,N94.6,Ferrous sulfate,SYN-BUNDA-V0062-01-SRC
+SYN-BUNDA-P0063,19,Female,2023-09-20,Obstetrics and Gynecology,Z30.9,Ibuprofen,SYN-BUNDA-V0063-01-SRC
+SYN-BUNDA-P0064,38,Female,2023-06-13,Obstetrics and Gynecology,N92.0,Ferrous sulfate,SYN-BUNDA-V0064-01-SRC
+SYN-BUNDA-P0065,19,Female,2023-05-31,Obstetrics and Gynecology,N92.0,Paracetamol,SYN-BUNDA-V0065-01-SRC
+SYN-BUNDA-P0066,26,Female,2024-07-26,Obstetrics and Gynecology,N94.6,Paracetamol,SYN-BUNDA-V0066-01-SRC
+SYN-BUNDA-P0067,35,Female,2025-03-29,General Practice,Z30.9,Paracetamol,SYN-BUNDA-V0067-01-SRC
+SYN-BUNDA-P0068,39,Female,2024-06-09,Obstetrics and Gynecology,N92.0,Ferrous sulfate,SYN-BUNDA-V0068-01-SRC
+SYN-BUNDA-P0069,45,Female,2023-03-28,Obstetrics and Gynecology,N92.0,Folic acid,SYN-BUNDA-V0069-01-SRC
+SYN-BUNDA-P0070,41,Female,2023-02-14,Internal Medicine,N92.0,Ibuprofen,SYN-BUNDA-V0070-01-SRC
+SYN-BUNDA-P0071,27,Female,2023-07-22,Internal Medicine,Z30.9,Ibuprofen,SYN-BUNDA-V0071-01-SRC
+SYN-BUNDA-P0072,27,Female,2024-04-14,Internal Medicine,N92.0,Ibuprofen,SYN-BUNDA-V0072-01-SRC
+SYN-BUNDA-P0073,50,Female,2023-02-20,Obstetrics and Gynecology,N93.9,Ferrous sulfate,SYN-BUNDA-V0073-01-SRC
+SYN-BUNDA-P0074,31,Female,2023-03-05,Obstetrics and Gynecology,Z34.9,Ferrous sulfate,SYN-BUNDA-V0074-01-SRC
+SYN-BUNDA-P0075,20,Female,2023-04-04,Internal Medicine,N93.9,Ferrous sulfate,SYN-BUNDA-V0075-01-SRC
+SYN-BUNDA-P0076,23,Female,2023-04-04,Internal Medicine,Z30.9,Ibuprofen,SYN-BUNDA-V0076-01-SRC
+SYN-BUNDA-P0077,31,Female,2023-09-03,Obstetrics and Gynecology,N92.0,None recorded,SYN-BUNDA-V0077-01-SRC
+SYN-BUNDA-P0078,25,Female,2024-04-14,Internal Medicine,N92.0,Ferrous sulfate,SYN-BUNDA-V0078-01-SRC
+SYN-BUNDA-P0079,39,Female,2023-07-19,Obstetrics and Gynecology,N94.6,Folic acid,SYN-BUNDA-V0079-01-SRC
+SYN-BUNDA-P0080,26,Female,2026-03-30,Obstetrics and Gynecology,N93.9,Ferrous sulfate,SYN-BUNDA-V0080-01-SRC
+SYN-BUNDA-P0081,44,Female,2023-01-25,Obstetrics and Gynecology,Z30.9,Ferrous sulfate,SYN-BUNDA-V0081-01-SRC
+SYN-BUNDA-P0082,32,Female,2023-07-25,Obstetrics and Gynecology,Z30.9,Ferrous sulfate,SYN-BUNDA-V0082-01-SRC
+SYN-BUNDA-P0083,42,Female,2023-02-28,Internal Medicine,Z34.9,Folic acid,SYN-BUNDA-V0083-01-SRC
+SYN-BUNDA-P0084,19,Female,2023-12-28,Obstetrics and Gynecology,N94.6,Folic acid,SYN-BUNDA-V0084-01-SRC
+SYN-BUNDA-P0085,51,Female,2025-01-15,Obstetrics and Gynecology,Z34.9,Folic acid,SYN-BUNDA-V0085-01-SRC
+SYN-BUNDA-P0086,24,Female,2023-04-08,Internal Medicine,N93.9,Ibuprofen,SYN-BUNDA-V0086-01-SRC
+SYN-BUNDA-P0087,33,Female,2023-01-15,General Practice,N92.0,Paracetamol,SYN-BUNDA-V0087-01-SRC
+SYN-BUNDA-P0088,42,Female,2023-02-09,General Practice,N94.6,Ferrous sulfate,SYN-BUNDA-V0088-01-SRC
+SYN-BUNDA-P0089,21,Female,2023-04-24,Internal Medicine,N93.9,Folic acid,SYN-BUNDA-V0089-01-SRC
+SYN-BUNDA-P0090,20,Female,2024-05-23,Internal Medicine,Z34.9,Paracetamol,SYN-BUNDA-V0090-01-SRC
+SYN-BUNDA-P0091,34,Female,2023-02-24,Obstetrics and Gynecology,Z30.9,Folic acid,SYN-BUNDA-V0091-01-SRC
+SYN-BUNDA-P0092,30,Female,2023-11-04,Obstetrics and Gynecology,Z30.9,Paracetamol,SYN-BUNDA-V0092-01-SRC
+SYN-BUNDA-P0093,22,Female,2026-03-28,Obstetrics and Gynecology,N92.0,Ibuprofen,SYN-BUNDA-V0093-01-SRC
+SYN-BUNDA-P0094,19,Female,2024-03-19,General Practice,N94.6,Folic acid,SYN-BUNDA-V0094-01-SRC
+SYN-BUNDA-P0095,34,Female,2023-07-25,Internal Medicine,N93.9,Paracetamol,SYN-BUNDA-V0095-01-SRC
+SYN-BUNDA-P0096,49,Female,2025-01-25,General Practice,N94.6,Ferrous sulfate,SYN-BUNDA-V0096-01-SRC
+SYN-BUNDA-P0097,27,Female,2023-04-03,General Practice,Z34.9,Ferrous sulfate,SYN-BUNDA-V0097-01-SRC
+SYN-BUNDA-P0098,28,Female,2023-01-15,Internal Medicine,Z34.9,Ferrous sulfate,SYN-BUNDA-V0098-01-SRC
+SYN-BUNDA-P0099,22,Female,2023-06-12,Obstetrics and Gynecology,Z30.9,Ibuprofen,SYN-BUNDA-V0099-01-SRC
+SYN-BUNDA-P0100,26,Female,2024-03-19,Obstetrics and Gynecology,Z34.9,Folic acid,SYN-BUNDA-V0100-01-SRC
