@@ -182,11 +182,35 @@ pub struct ImportJob {
     pub failure_code: Option<String>,
 }
 
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize)]
 pub struct QueueRequest {
     pub patient_id: String,
     pub encounter_id: String,
     pub doctor_id: String,
+}
+
+fn validate_queue_request(
+    request: &QueueRequest,
+    active_dataset_id: &str,
+) -> Result<crate::domain::EncounterKey, &'static str> {
+    request
+        .patient_id
+        .parse::<crate::domain::PatientId>()
+        .map_err(|_| "patient_id is invalid")?;
+    request
+        .doctor_id
+        .parse::<crate::domain::PrincipalId>()
+        .map_err(|_| "doctor_id is invalid")?;
+    request
+        .encounter_id
+        .parse::<crate::domain::EncounterId>()
+        .map_err(|_| "encounter_id is invalid")?;
+    let encounter = crate::domain::parse_encounter_id(&request.encounter_id)
+        .map_err(|_| "encounter_id is invalid")?;
+    if encounter.dataset_id != active_dataset_id || encounter.patient_id != request.patient_id {
+        return Err("encounter_id does not belong to patient_id");
+    }
+    Ok(encounter)
 }
 
 #[derive(Serialize, sqlx::FromRow)]
@@ -737,31 +761,8 @@ pub async fn create_queue_item(
             "This role cannot assign queue items",
         );
     }
-    if request.patient_id.trim().is_empty()
-        || request.encounter_id.trim().is_empty()
-        || request.doctor_id.trim().is_empty()
-    {
-        return problem(
-            StatusCode::UNPROCESSABLE_ENTITY,
-            "Invalid request",
-            "patient_id, encounter_id and doctor_id are required",
-        );
-    }
-    let Ok(encounter) = crate::domain::parse_encounter_id(&request.encounter_id) else {
-        return problem(
-            StatusCode::UNPROCESSABLE_ENTITY,
-            "Invalid request",
-            "encounter_id is invalid",
-        );
-    };
-    if encounter.dataset_id != state.config.active_dataset_id
-        || encounter.patient_id != request.patient_id
-    {
-        return problem(
-            StatusCode::UNPROCESSABLE_ENTITY,
-            "Invalid request",
-            "encounter_id does not belong to patient_id",
-        );
+    if let Err(detail) = validate_queue_request(&request, &state.config.active_dataset_id) {
+        return problem(StatusCode::UNPROCESSABLE_ENTITY, "Invalid request", detail);
     }
     let doctor = sqlx::query("SELECT role, active FROM dev_identities WHERE principal_id=$1")
         .bind(&request.doctor_id)
@@ -1446,6 +1447,37 @@ mod tests {
             summary_lease_seconds: 60,
             summary_max_attempts: 3,
             active_dataset_id: "demo-1000000-v1".into(),
+        }
+    }
+
+    #[test]
+    fn queue_request_validates_identifiers_dataset_and_patient_pair() {
+        let valid = QueueRequest {
+            patient_id: "SYN-BUNDA-P0001".into(),
+            encounter_id: "enc-demo-100-v1-0001".into(),
+            doctor_id: "doctor-1".into(),
+        };
+        assert!(validate_queue_request(&valid, "demo-100-v1").is_ok());
+
+        for invalid in [
+            QueueRequest {
+                patient_id: "../patient".into(),
+                ..valid.clone()
+            },
+            QueueRequest {
+                doctor_id: "doctor/../../secret".into(),
+                ..valid.clone()
+            },
+            QueueRequest {
+                encounter_id: "enc-demo-1000-v1-0001".into(),
+                ..valid.clone()
+            },
+            QueueRequest {
+                patient_id: "SYN-BUNDA-P0002".into(),
+                ..valid.clone()
+            },
+        ] {
+            assert!(validate_queue_request(&invalid, "demo-100-v1").is_err());
         }
     }
 

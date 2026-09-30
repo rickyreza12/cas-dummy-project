@@ -79,6 +79,10 @@ cargo run -- api
 The API listens on the configured `API_BIND_ADDR` (by default,
 `http://127.0.0.1:8000`).
 
+Swagger UI is available at `http://127.0.0.1:8000/swagger`; the machine-readable
+OpenAPI contract is at `http://127.0.0.1:8000/openapi.json`. Swagger UI is public,
+while `/v1/*` resources remain protected by JWT middleware.
+
 Startup connects to `POSTGRES_URL` and applies embedded SQLx migrations before serving requests. The public endpoint is `GET /healthz`; patient, encounter, source, context, queue, summary, feedback and import routes require `Authorization: Bearer <JWT>`. JWTs must be signed with the configured RS256 key pair and must contain the configured issuer and audience.
 
 Place only allowlisted fixture files under `FIXTURE_DIR` (`fixtures` by default). The worker validates and stages an import before publishing it; client-supplied filesystem paths and URLs are rejected.
@@ -99,7 +103,7 @@ cargo run -- check-fixture
 cargo run -- seed-dev-users
 ```
 
-`check-fixture` requires an explicit dataset and expected count. It validates the allowlisted CSV (schema, dates, keys, duplicates, row count, and SHA-256) before checking the database count:
+`check-fixture` requires an explicit dataset and expected count. It validates an allowlisted CSV or small XLSX fixture (schema, dates, keys, duplicates, row count, and SHA-256) before checking the database count. XLSX validation is capped at 1,000 rows; the million-row source remains CSV/Neon-only:
 
 ```powershell
 cargo run -- check-fixture --dataset demo-1000000-v1 --expected 1000000

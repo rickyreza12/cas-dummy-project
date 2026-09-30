@@ -108,7 +108,8 @@ pub async fn run(
 
 pub async fn process_one_import_job(pool: &PgPool, fixture_dir: &Path) -> Result<bool> {
     let mut tx = pool.begin().await?;
-    let job = sqlx::query("SELECT import_job_id, fixture_reference, expected_rows FROM import_jobs WHERE status = 'queued' ORDER BY created_at FOR UPDATE SKIP LOCKED LIMIT 1").fetch_optional(&mut *tx).await?;
+    let worker_id = format!("import-worker-{}", Uuid::new_v4());
+    let job = sqlx::query("SELECT import_job_id, fixture_reference, expected_rows FROM import_jobs WHERE (status = 'queued' OR (status = 'running' AND lease_expires_at < now())) ORDER BY created_at FOR UPDATE SKIP LOCKED LIMIT 1").fetch_optional(&mut *tx).await?;
     let Some(job) = job else {
         tx.commit().await?;
         return Ok(false);
@@ -116,6 +117,8 @@ pub async fn process_one_import_job(pool: &PgPool, fixture_dir: &Path) -> Result
     let job_id: Uuid = job.get("import_job_id");
     let reference: String = job.get("fixture_reference");
     let expected: i64 = job.get("expected_rows");
+    sqlx::query("UPDATE import_jobs SET status='running', lease_owner=$2, lease_expires_at=now() + interval '5 minutes' WHERE import_job_id=$1")
+        .bind(job_id).bind(&worker_id).execute(&mut *tx).await?;
     let Some(spec) = crate::fixture::allowlisted(&reference, expected as u64) else {
         sqlx::query("UPDATE import_jobs SET status='failed', failure_code='invalid_fixture_reference' WHERE import_job_id=$1").bind(job_id).execute(&mut *tx).await?;
         tx.commit().await?;
@@ -129,7 +132,7 @@ pub async fn process_one_import_job(pool: &PgPool, fixture_dir: &Path) -> Result
             return Ok(true);
         }
     };
-    let (imported, rejected, checksum) = match crate::fixture::validate_csv(&path, expected as u64)
+    let (imported, rejected, checksum) = match crate::fixture::validate_file(&path, expected as u64)
     {
         Ok(result) => result,
         Err(_) => {
@@ -164,7 +167,7 @@ pub async fn process_one_import_job(pool: &PgPool, fixture_dir: &Path) -> Result
             .bind(job_id).bind((index + 2) as i64).bind(row.get(0).unwrap_or_default()).bind(row.get(1).unwrap_or_default().parse::<i32>()?).bind(row.get(2).unwrap_or_default()).bind(chrono::NaiveDate::parse_from_str(row.get(3).unwrap_or_default(), "%Y-%m-%d")?).bind(row.get(4).unwrap_or_default()).bind(row.get(5).unwrap_or_default()).bind(row.get(6).unwrap_or_default()).bind(row.get(7).unwrap_or_default()).execute(&mut *tx).await?;
     }
     sqlx::query("INSERT INTO synthetic_patients (patient_id,age_years,sex,visit_date,specialist,icd10_code,prescription_recorded,source_record_id) SELECT patient_id,age_years,sex,visit_date,specialist,icd10_code,prescription_recorded,source_record_id FROM import_staging WHERE import_job_id=$1").bind(job_id).execute(&mut *tx).await?;
-    sqlx::query("UPDATE import_jobs SET status='ready', finished_at=now() WHERE import_job_id=$1")
+    sqlx::query("UPDATE import_jobs SET status='ready', lease_owner=NULL, lease_expires_at=NULL, finished_at=now() WHERE import_job_id=$1")
         .bind(job_id)
         .execute(&mut *tx)
         .await?;

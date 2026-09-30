@@ -34,8 +34,8 @@ impl Config {
         let postgres_url = normalize_postgres_url(postgres_url);
         let jwt_issuer = required("JWT_ISSUER")?;
         let jwt_audience = required("JWT_AUDIENCE")?;
-        let jwt_private_key = std::env::var("JWT_PRIVATE_KEY").unwrap_or_default();
-        let jwt_public_key = std::env::var("JWT_PUBLIC_KEY").unwrap_or_default();
+        let jwt_private_key = pem_env("JWT_PRIVATE_KEY");
+        let jwt_public_key = pem_env("JWT_PUBLIC_KEY");
         let jwt_key_id = std::env::var("JWT_KEY_ID").unwrap_or_else(|_| "local-current".into());
         if jwt_key_id.trim().is_empty() {
             bail!("JWT_KEY_ID must not be empty");
@@ -164,6 +164,12 @@ fn optional(name: &str) -> Option<String> {
     std::env::var(name)
         .ok()
         .filter(|value| !value.trim().is_empty())
+}
+
+fn pem_env(name: &str) -> String {
+    std::env::var(name)
+        .unwrap_or_default()
+        .replace("\\n", "\n")
 }
 
 /// Neon pooler endpoints infer the project from their hostname. Supplying a

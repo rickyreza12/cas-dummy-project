@@ -17,6 +17,7 @@ mod fixture;
 mod http;
 mod repo;
 mod service;
+mod swagger;
 mod worker;
 
 use config::Config;
@@ -73,7 +74,7 @@ async fn main() -> Result<()> {
                 expected as u64,
                 std::path::Path::new(&config.fixture_dir),
             )?;
-            let (imported, rejected, checksum) = fixture::validate_csv(&path, expected as u64)?;
+            let (imported, rejected, checksum) = fixture::validate_file(&path, expected as u64)?;
             if imported != expected as u64 || rejected != 0 {
                 anyhow::bail!(
                     "fixture {} has {imported} valid and {rejected} rejected rows",
@@ -265,6 +266,8 @@ async fn run_api(config: Config) -> Result<()> {
 fn build_router(state: AppState) -> Router {
     Router::new()
         .route("/healthz", get(|| async { "ok" }))
+        .route("/openapi.json", get(swagger::openapi))
+        .route("/swagger", get(swagger::ui))
         .route("/v1/auth/token", axum::routing::post(auth::issue_token))
         .route("/v1/patients", get(http::list_patients))
         .route("/v1/patients/{id}", get(http::patient_detail))
@@ -858,6 +861,72 @@ mod tests {
             .unwrap();
             assert_eq!(active_dataset, fixture_reference);
         }
+    }
+
+    #[tokio::test]
+    #[ignore = "requires an isolated PostgreSQL database; run in CI or with POSTGRES_URL"]
+    async fn summary_workers_recover_expired_lease_without_duplicate_artifact() {
+        let _guard = database_test_lock().lock().await;
+        let url = std::env::var("POSTGRES_URL").expect("POSTGRES_URL must be set");
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .max_connections(4)
+            .connect(&url)
+            .await
+            .unwrap();
+        sqlx::migrate!().run(&pool).await.unwrap();
+        sqlx::query(
+            "TRUNCATE TABLE audit_events, feedback, summaries, summary_jobs, import_rejects, import_staging, import_jobs, queue_items, dataset_registry, dev_identities, synthetic_patients CASCADE",
+        )
+        .execute(&pool)
+        .await
+        .unwrap();
+
+        let patient_id = "SYN-BUNDA-P0001";
+        let encounter_id = "enc-demo-100-v1-0001";
+        let doctor_id = "summary-worker-doctor";
+        let job_id = uuid::Uuid::new_v4();
+        sqlx::query("INSERT INTO synthetic_patients (patient_id, age_years, sex, visit_date, specialist, icd10_code, prescription_recorded, source_record_id) VALUES ($1, 40, 'F', '2026-01-01', 'Cardiology', 'A01', 'None recorded', 'SYN-BUNDA-V0001-SRC')")
+            .bind(patient_id).execute(&pool).await.unwrap();
+        sqlx::query(
+            "INSERT INTO dev_identities (principal_id, role, active) VALUES ($1, 'doctor', true)",
+        )
+        .bind(doctor_id)
+        .execute(&pool)
+        .await
+        .unwrap();
+        sqlx::query("INSERT INTO summary_jobs (summary_job_id, dataset_id, patient_id, encounter_id, requested_by, reason, idempotency_key, request_hash, status, attempt_count, lease_owner, lease_expires_at) VALUES ($1, 'demo-100-v1', $2, $3, $4, 'doctor_refresh', 'recovery-key', $5, 'running', 1, 'dead-worker', now() - interval '1 minute')")
+            .bind(job_id).bind(patient_id).bind(encounter_id).bind(doctor_id).bind(vec![0_u8; 32]).execute(&pool).await.unwrap();
+
+        let (first, second) = tokio::join!(
+            worker::process_one_summary_job(&pool, 60, 3),
+            worker::process_one_summary_job(&pool, 60, 3)
+        );
+        assert_eq!(
+            usize::from(first.unwrap()) + usize::from(second.unwrap()),
+            1
+        );
+
+        let job: (String, i32, Option<String>) = sqlx::query_as(
+            "SELECT status, attempt_count, lease_owner FROM summary_jobs WHERE summary_job_id=$1",
+        )
+        .bind(job_id)
+        .fetch_one(&pool)
+        .await
+        .unwrap();
+        assert_eq!(job, ("ready".to_owned(), 2, None));
+        let artifact_count: i64 =
+            sqlx::query_scalar("SELECT count(*) FROM summaries WHERE summary_job_id=$1")
+                .bind(job_id)
+                .fetch_one(&pool)
+                .await
+                .unwrap();
+        assert_eq!(artifact_count, 1);
+        assert!(!worker::process_one_summary_job(&pool, 60, 3).await.unwrap());
+
+        let exhausted_job = uuid::Uuid::new_v4();
+        sqlx::query("INSERT INTO summary_jobs (summary_job_id, dataset_id, patient_id, encounter_id, requested_by, reason, idempotency_key, request_hash, status, attempt_count) VALUES ($1, 'demo-100-v1', $2, $3, $4, 'doctor_refresh', 'exhausted-key', $5, 'queued', 3)")
+            .bind(exhausted_job).bind(patient_id).bind(encounter_id).bind(doctor_id).bind(vec![1_u8; 32]).execute(&pool).await.unwrap();
+        assert!(!worker::process_one_summary_job(&pool, 60, 3).await.unwrap());
     }
 
     #[test]

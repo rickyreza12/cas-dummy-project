@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 
 use anyhow::{Result, bail};
+use calamine::{Data, Reader, open_workbook_auto};
 use csv::StringRecord;
 use sha2::{Digest, Sha256};
 use std::{
@@ -96,6 +97,75 @@ pub fn validate_csv(path: &Path, expected_rows: u64) -> Result<(u64, u64, String
     Ok((imported, rejected, format!("{:x}", hash.finalize())))
 }
 
+pub fn validate_file(path: &Path, expected_rows: u64) -> Result<(u64, u64, String)> {
+    match path.extension().and_then(|extension| extension.to_str()) {
+        Some(extension) if extension.eq_ignore_ascii_case("xlsx") => {
+            validate_xlsx(path, expected_rows)
+        }
+        _ => validate_csv(path, expected_rows),
+    }
+}
+
+/// Validate a small XLSX fixture without making XLSX a production-scale
+/// ingestion path. The workbook must contain exactly one worksheet and the
+/// same eight-column contract as CSV fixtures. Cell values are converted only
+/// for validation; the original file remains the source artifact.
+pub fn validate_xlsx(path: &Path, expected_rows: u64) -> Result<(u64, u64, String)> {
+    if expected_rows > 1_000 {
+        bail!("XLSX validation is limited to small fixtures");
+    }
+    let mut workbook = open_workbook_auto(path)?;
+    let sheet = workbook
+        .sheet_names()
+        .first()
+        .cloned()
+        .ok_or_else(|| anyhow::anyhow!("workbook has no worksheets"))?;
+    let range = workbook
+        .worksheet_range(&sheet)
+        .map_err(|error| anyhow::anyhow!("cannot read worksheet: {error}"))?;
+    let mut rows = range.rows();
+    let header = rows
+        .next()
+        .ok_or_else(|| anyhow::anyhow!("worksheet is empty"))?;
+    let header_values = header.iter().map(cell_text).collect::<Vec<_>>();
+    if header_values != HEADER {
+        bail!("fixture header does not match the required eight-column schema");
+    }
+    let mut patients = HashSet::new();
+    let mut sources = HashSet::new();
+    let mut imported = 0_u64;
+    let mut rejected = 0_u64;
+    for row in rows {
+        let record = StringRecord::from(row.iter().map(cell_text).collect::<Vec<_>>());
+        if validate_row(&record, &mut patients, &mut sources).is_ok() {
+            imported += 1;
+        } else {
+            rejected += 1;
+        }
+    }
+    if imported + rejected != expected_rows {
+        bail!("fixture row count does not match expected_rows");
+    }
+    let mut file = File::open(path)?;
+    let mut hash = Sha256::new();
+    std::io::copy(&mut file, &mut hash)?;
+    Ok((imported, rejected, format!("{:x}", hash.finalize())))
+}
+
+fn cell_text(cell: &Data) -> String {
+    match cell {
+        Data::Empty => String::new(),
+        Data::String(value) => value.clone(),
+        Data::Int(value) => value.to_string(),
+        Data::Float(value) if value.fract() == 0.0 => format!("{value:.0}"),
+        Data::Float(value) => value.to_string(),
+        Data::Bool(value) => value.to_string(),
+        Data::DateTime(value) => value.to_string(),
+        Data::DateTimeIso(value) | Data::DurationIso(value) => value.clone(),
+        Data::Error(error) => format!("{error:?}"),
+    }
+}
+
 fn validate_row(
     row: &StringRecord,
     patients: &mut HashSet<String>,
@@ -186,6 +256,12 @@ mod tests {
         assert_eq!(result.1, 0);
         assert_eq!(result.2.len(), 64);
         let _ = fs::remove_file(path);
+    }
+
+    #[test]
+    fn xlsx_validation_rejects_large_fixture_before_opening_file() {
+        let path = Path::new("does-not-exist.xlsx");
+        assert!(validate_xlsx(path, 1_001).is_err());
     }
 
     #[test]

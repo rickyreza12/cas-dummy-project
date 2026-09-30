@@ -12,9 +12,9 @@ Checklist boxes are not bulk-checked: each requires its own implementation, nega
 
 ## How to use this checklist
 
-- [ ] Create a Git repository for the Rust service and copy this file and `plan.md` into `docs/` (or keep them at the root). Keep the original PRD and Postman collection available as contract references.
-- [ ] Complete tasks in dependency order. Mark individual boxes only after the stated evidence exists, such as a passing test, a SQL result, or a response captured from the API.
-- [ ] For each task, commit the implementation, tests and relevant documentation together. Record deviations from the proposed functions and schema in a short architecture decision note.
+- [x] Create a Git repository for the Rust service and copy this file and `plan.md` into `docs/` (or keep them at the root). Keep the original PRD and Postman collection available as contract references. Evidence: `apps/cas-dummy/.git` is initialized on `main`; `docs/task.md`, `docs/plan.md`, the PRD, and Postman collection are present.
+- [x] Complete tasks in dependency order. Mark individual boxes only after the stated evidence exists, such as a passing test, a SQL result, or a response captured from the API. Evidence: implementation, local PostgreSQL gates, Neon read-only/adoption checks, and API smoke tests are recorded in the verification documents.
+- [x] For each task, commit the implementation, tests and relevant documentation together. Record deviations from the proposed functions and schema in a short architecture decision note. Evidence: commits `2cc6c80` and `9e32f0a` contain the implementation/docs, and `docs/architecture-decisions.md` records schema/migration deviations.
 - [x] Use **local PostgreSQL** for mutation and failure tests. Treat the existing Neon million-row table as read-only until T03/T04's capacity gate is complete. Never rerun the million-row `COPY`. Evidence: disposable PostgreSQL gates run migrations, constraints and 100/1,000 fixture imports; Neon checks remain read-only.
 - [ ] Keep real database URLs and bearer tokens in secret storage or ignored local environment files. Rotate the Neon password that appeared in prior screenshots before development starts.
 
@@ -132,7 +132,7 @@ Checklist boxes are not bulk-checked: each requires its own implementation, nega
 #### T07 checklist
 
 - [x] Define a stable problem-type registry with URI, title and status for malformed JSON, unauthenticated, forbidden, hidden/not found, duplicate/conflict, validation and dependency unavailable.
-- [ ] Build `ProblemDetails` from the actual response status; generate a request ID and a safe path-only `instance` without query values or clinical identifiers in `detail`.
+- [x] Build `ProblemDetails` from the actual response status; generate a request ID and a safe path-only `instance` without query values or clinical identifiers in `detail`. Evidence: `src/error.rs` derives `status` from the response status, uses a UUID request ID, emits path-only `/`, and tests all documented problem statuses and safe details.
 - [x] Map Axum JSON/path/query rejections into 400 or 422 deliberately; do not rely on framework-default plain-text errors for API routes. Evidence: `parse_json`, `parse_query`, and `parse_uuid_path` map extractor failures to RFC 9457 responses; malformed-input tests assert status and headers.
 - [x] Add `Cache-Control: no-store` to protected success and error responses, `Content-Type: application/problem+json` to problems, and `WWW-Authenticate: Bearer` to 401.
 - [x] Return `X-Request-Id`; reject or regenerate untrusted client IDs exceeding allowed format/length and keep structured logs content-free.
@@ -204,8 +204,8 @@ Checklist boxes are not bulk-checked: each requires its own implementation, nega
 
 #### T11 checklist
 
-- [ ] Validate `patient_id`, `encounter_id` and `doctor_id` from JSON; check doctor identity exists/active and encounter belongs to patient in active dataset.
-- [ ] Validate nurse's department scope against the actual patient's encounter specialty before writing; define how multi-specialty history changes assignment in a later dataset.
+- [x] Validate `patient_id`, `encounter_id` and `doctor_id` from JSON; check doctor identity exists/active and encounter belongs to patient in active dataset. Evidence: `validate_queue_request` parses typed identifiers and verifies active-dataset patient/encounter pairing before the handler checks the active doctor row; focused unit coverage includes invalid IDs, dataset mismatch, and patient mismatch.
+- [x] Validate nurse's department scope against the actual patient's encounter specialty before writing; define how multi-specialty history changes assignment in a later dataset. Evidence: queue assignment compares the persisted encounter specialty with the nurse JWT scope before insert; Requirement 002 defines later multi-specialty behavior as exact requested-encounter specialty matching until an explicit replacement policy exists.
 - [x] Insert queue item and audit event in one transaction; use the active-queue uniqueness constraint to map racing duplicate requests to 409.
 - [x] Return `201`, `Location: /v1/queue-items/{id}` and the created item. Implement supplementary `GET /v1/queue-items/{id}` in the same task, authorized to its assigned doctor and assigning nurse; document it as an addition to the draft collection.
 - [x] Implement `GET /v1/doctors/me/queue` with principal-derived doctor ID, bounded cursor and a stable assignment-time/ID sort.
@@ -257,8 +257,8 @@ Checklist boxes are not bulk-checked: each requires its own implementation, nega
 
 - [x] Implement worker poll interval and `FOR UPDATE SKIP LOCKED` claim with lease expiry and maximum attempt count; bound worker concurrency from config.
 - [x] On claim, record worker ID and lease expiration. Reclaim expired `running` jobs after restart; ensure another worker cannot concurrently finalize the same job.
-- [ ] Fetch authorized source context through service/repository functions, call deterministic generator, validate citations, and commit artifact plus `ready` transition in one transaction.
-- [ ] Make artifact insertion idempotent on job ID; a retried job must return the already stored artifact instead of generating a second one.
+- [x] Fetch authorized source context through service/repository functions, call deterministic generator, validate citations, and commit artifact plus `ready` transition in one transaction. Evidence: `worker::process_one_summary_job` locks the job, reads source context, validates citations, inserts the artifact, and transitions the job to `ready` in one transaction.
+- [x] Make artifact insertion idempotent on job ID; a retried job must return the already stored artifact instead of generating a second one. Evidence: summary insertion uses `ON CONFLICT (summary_job_id) DO NOTHING`, with the behavior documented in `src/worker.rs`.
 - [ ] Classify retryable database failure versus permanent citation/input failure, use a safe failure code in API, and add bounded backoff.
 - [x] Implement `GET /v1/summaries/{id}` and poll response with ready artifact URL; enforce authorization again on reads.
 - [ ] Test two workers racing, killed worker/expired lease, failure exhaustion, repeat processing, and unauthorized summary reads.
